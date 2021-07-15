@@ -50,15 +50,15 @@ public interface IIdentityProviderService {
      * @param samlInfo
      * @return
      */
-    public default String SAMLDecoder(String samlInfo) {
-        System.out.println("Inside of SAMLDecoder In : " + this.getClass().getName());
+    public static String SAMLDecoder(String samlInfo) {
+        System.out.println("Inside of SAMLDecoder In : ");
         String decodedInfo = null;
         try {
             Base64 base64 = new Base64();
             byte[] decodedBytes = base64.decode(samlInfo);
             decodedInfo = new String(decodedBytes);
         } catch (Exception e) {
-            System.out.println("Exception in " + this.getClass().getName() + "-SAMLDecoder() : " + e.getMessage());
+            System.out.println("Exception in -SAMLDecoder() : " + e.getMessage());
             e.printStackTrace();
         }
         return decodedInfo;
@@ -70,8 +70,8 @@ public interface IIdentityProviderService {
      * @param xmlString
      * @return
      */
-    public default Document convertStringToXMLDocument(String xmlString) {
-        System.out.println("Inside of convertStringToXMLDocument In : " + this.getClass().getName());
+    public static Document convertStringToXMLDocument(String xmlString) {
+        System.out.println("Inside of convertStringToXMLDocument In : ");
         //Parser that produces DOM object trees from XML content
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         //API to obtain DOM Document instance
@@ -83,19 +83,16 @@ public interface IIdentityProviderService {
             Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
             return doc;
         } catch (Exception e) {
-            System.out.println("Exception in " + this.getClass().getName() + "-convertStringToXMLDocument() : " + e.getMessage());
+            System.out.println("Exception in -convertStringToXMLDocument() : " + e.getMessage());
             e.printStackTrace();
         }
         return null;
     }
 
-    public default String getRootTag(String rootTag){
-        System.out.println("Inside of getRootTag In : " + this.getClass().getName());
-        if(rootTag.contains("saml2p")){
-            rootTag = "saml2";
-        }else if(rootTag.contains("samlp")){
-            rootTag = "saml";
-        }
+    public static String getRootTag(String rootTag){
+        System.out.println("Inside of getRootTag In : ");
+        rootTag = rootTag.replace("p:Response","");
+        System.out.println("root Tag in getRootTag : "+rootTag);
         return rootTag;
     }
 }

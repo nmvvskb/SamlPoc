@@ -41,15 +41,4 @@ public class IDPFacotry {
         return  this.iIdentityProviderService.prepareEndPointURL();
     }
 
-    public String SAMLDecoder(String samlInfo){
-        return this.iIdentityProviderService.SAMLDecoder(samlInfo);
-    }
-
-    public Document convertStringToXMLDocument(String decodeInfo){
-        return  this.iIdentityProviderService.convertStringToXMLDocument(decodeInfo);
-    }
-
-    public String getRootTag(String nodeName) {
-        return this.iIdentityProviderService.getRootTag(nodeName);
-    }
 }

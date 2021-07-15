@@ -19,13 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.*;
 import java.net.URISyntaxException;
-
+import org.json.JSONObject;
+import org.json.XML;
 
 @Controller
 public class HomeController {
 
     @Autowired
     private RestTemplate restTemplate;
+
 
     @GetMapping("/")
     public String index(Model model) {
@@ -90,18 +92,22 @@ public class HomeController {
     @RequestMapping("/home")
     public String home(Model model,@RequestParam(value = "SAMLResponse", required = true) String SAMLResponse) {
         System.out.println(" home in  HomeController");
-        IDPFacotry idpFacotry = new IDPFacotry(idpType);
-        String decodedInfo = idpFacotry.SAMLDecoder(SAMLResponse);
-        Document doc = idpFacotry.convertStringToXMLDocument( decodedInfo );
+        String decodedInfo = IIdentityProviderService.SAMLDecoder(SAMLResponse);
+        Document doc = IIdentityProviderService.convertStringToXMLDocument( decodedInfo );
 
+        //need to do dynamic approach to fetch detials of response
         //Verify XML document is build correctly
         System.out.println("FRIST Child ::: "+doc.getFirstChild().getNodeName());
-        String rootTag = idpFacotry.getRootTag(doc.getFirstChild().getNodeName());
+        String rootTag = IIdentityProviderService.getRootTag(doc.getFirstChild().getNodeName());
 
         String loggedInAs = doc.getElementsByTagName(rootTag+":NameID").item(0).getTextContent();
         System.out.println("saml2:NameID ::: "+loggedInAs);
 
         model.addAttribute("username", loggedInAs);
+
+//        JSONObject xmlJSONObj = XML.toJSONObject(decodedInfo);
+//        decodedInfo = xmlJSONObj.toString();
+
         model.addAttribute("SAMLResponse", decodedInfo);
         return "home";
     }
