@@ -5,9 +5,13 @@
 </head>
 <body>
     <h3><Strong>Welcome!</strong><br/>You are successfully logged in!</h3>
-    <p>You are logged as <span class="badge badge-dark" th:text="${username}">null</span>.</p>
-    <small>
+    <p>You are logged as <b><span class="badge badge-dark" th:text="${username}">null</span></b>.</p>
+    <br>
+    <h3><Strong>IDP SAML Response</strong><br/></h3>
+    <p><span class="badge badge-dark" th:text="${SAMLResponse}">null</span>.</p>
+    <br>
+    <h3>
         <a th:href="@{/logout}">Logout</a>
-    </small>
+    </h3>
 </body>
 </html>
