@@ -7,7 +7,7 @@
 
     <script>
     function validateDetails() {
-        var selIdp = document.forms["IDPForm"]["providerList"];
+        var selIdp = document.forms["IDPForm1"]["idpSelectionList"];
 
         if (selIdp.value == "") {
             window.alert("Please choose Identity Provider");
@@ -22,18 +22,19 @@
 <body>
 
 <h3><Strong>Welcome to <b>Taxilla</b> Spring SAML Application</strong></h3>
+<p><span class="badge badge-dark" th:text="${idpNotImpl}">null</span>.</p>
 <br>
 <div class="container">
 
     <div class="row">
         <div class="col-md-4 mt-5">
-            <form name="IDPForm" action="/auth" onsubmit="return validateDetails()" method="post" th:object="${idpList}">
+            <form name="IDPForm1" action="/idpTypeSelection" onsubmit="return validateDetails()" method="post" th:object="${idpSelectList}">
 
                 <div class="form-group">
-                    <label for="providerList"><b>Choose Identity Provider :: </b></label>
-                    <select class="form-control selectpicker" th:field="*{providerList}" id="providerList" name="providerList">
+                    <label for="idpSelectionList"><b>Choose Type of Identity Provider :: </b></label>
+                    <select class="form-control selectpicker" th:field="*{idpSelectionList}" id="idpSelectionList" name="idpSelectionList">
                         <option value="">Nothing selected</option>
-                        <option th:each="idp : ${T(com.taxilla.SamlPoc.utils.IdenityProviderList).values()}"
+                        <option th:each="idp : ${T(com.taxilla.SamlPoc.utils.IdpSelectionList).values()}"
                                 th:value="${idp}"
                                 th:text="${idp}">idp
                         </option>

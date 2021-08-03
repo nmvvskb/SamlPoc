@@ -1,5 +1,7 @@
 package com.taxilla.SamlPoc.services;
 
+import com.taxilla.SamlPoc.entity.IdentityProviderDetail;
+import com.taxilla.SamlPoc.entity.IdentityProviderDetailDto;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -9,19 +11,23 @@ import org.xml.sax.InputSource;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.File;
-import java.io.StringReader;
+import java.io.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-@Service
-@Qualifier("iIdentityProviderService")
+
 public interface IIdentityProviderService {
 
-    File loadIDPMetaDataFile(String idpType);
+    public static Map<Integer, Map<String, IdentityProviderDetailDto>> dataMap = new HashMap<>();
+
+    String loadIDPMetaDataFile(IdentityProviderDetailDto idpType);
 
     String loadSSOEndPointURL(String idpType);
 
-    String prepareEndPointURL();
+    String getMetaDataInfo(String providedIdp);
 
+//    Map<Integer,IdentityProviderDetail> dataMap = new HashMap<>();
 
     /**
      * This method will encode the given metaData FIle
@@ -29,11 +35,12 @@ public interface IIdentityProviderService {
      * @param metaDataFile
      * @return
      */
-    public default String SAMLEncoder(File metaDataFile) {
+    public default String SAMLEncoder(String metaDataFile) {
         System.out.println("Inside of SAMLEncoder In : " + this.getClass().getName());
         String encodedInfo = null;
         try {
-            byte[] metaContent = FileUtils.readFileToByteArray(metaDataFile);
+            File file = WriteStringToFile(metaDataFile);
+            byte[] metaContent = FileUtils.readFileToByteArray(file);
             Base64 base64 = new Base64();
             byte[] base64EncodeByteArray = base64.encode(metaContent);
             encodedInfo = new String(base64EncodeByteArray);
@@ -42,6 +49,23 @@ public interface IIdentityProviderService {
             e.printStackTrace();
         }
         return encodedInfo;
+    }
+
+    private File WriteStringToFile(String metaDataFile){
+        File file = new File("./src/main/resources/saml/metadata/tempdata.txt");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            byte[] bytes = metaDataFile.getBytes();
+            bos.write(bytes);
+            bos.close();
+            fos.close();
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        }
+        return file;
     }
 
     /**
@@ -89,10 +113,27 @@ public interface IIdentityProviderService {
         return null;
     }
 
-    public static String getRootTag(String rootTag){
+    public static String getRootTag(String rootTag) {
         System.out.println("Inside of getRootTag In : ");
-        rootTag = rootTag.replace("p:Response","");
-        System.out.println("root Tag in getRootTag : "+rootTag);
+        rootTag = rootTag.replace("p:Response", "");
+        System.out.println("root Tag in getRootTag : " + rootTag);
         return rootTag;
     }
+
+
+    static Map<Integer, Map<String, IdentityProviderDetailDto>> save(IdentityProviderDetailDto entity) {
+        if (dataMap.isEmpty()) {
+            Map<String, IdentityProviderDetailDto> map = new HashMap<>();
+            map.put(entity.getOriginKey(), entity);
+            dataMap.put(1, map);
+        } else {
+            Integer max = Collections.max(dataMap.keySet());
+            Map<String, IdentityProviderDetailDto> map = new HashMap<>();
+            map.put(entity.getOriginKey(), entity);
+            dataMap.put(max + 1, map);
+        }
+        return dataMap;
+    }
+
+
 }

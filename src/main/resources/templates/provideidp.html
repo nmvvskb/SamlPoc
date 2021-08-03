@@ -1,0 +1,54 @@
+
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Taxilla SAML Application</title>
+
+  <script>
+    function validateDetails() {
+        var selIdp = document.forms["IDPForm3"]["name"];
+
+        if (selIdp.value == "") {
+            window.alert("Please Enter Identity Provider");
+            name.focus();
+            return false;
+        }
+        return true;
+    }
+    </script>
+
+</head>
+<body>
+
+<h3><Strong>Welcome to <b>Taxilla</b> Spring SAML Application</strong></h3>
+<br>
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-4 mt-5">
+      <form name="IDPForm3" action="http://localhost:7272/idm/saml-idp-discovery" onsubmit="return validateDetails()" method="post" th:object="${givenIdp}">
+
+        <div class="form-group">
+          <label><b>Provide Identity Provider :: </b></label>
+          <p> <input type="text" th:field="*{name}" name="name" value="@name" id="name">
+          </p>
+          <input class="form-control"
+                 type="hidden"
+                 th:value="${selectedIDPType}" id="selectedIDPType" name="selectedIDPType" />
+          <br>
+          <p><b><span class="badge badge-dark" th:text="${errorMessage}">null</span></b>.</p>
+        </div>
+        <br>
+        <button class="btn btn-primary" type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

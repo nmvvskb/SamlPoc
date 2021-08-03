@@ -23,6 +23,14 @@ dependencies {
 //	implementation group: 'org.springframework.security.extensions', name: 'spring-security-saml2-core', version: '1.0.10.RELEASE'
 	implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 	implementation 'org.json:json:20171018'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation group: 'org.hibernate', name: 'hibernate-gradle-plugin', version: '5.5.4.Final'
+	runtimeOnly 'com.h2database:h2'
+	implementation group: 'javax.validation', name: 'validation-api', version: '2.0.1.Final'
+	implementation group: 'io.micrometer', name: 'micrometer-core', version: '1.7.2'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-jdbc', version: '2.5.2'
+	implementation group: 'io.projectreactor', name: 'reactor-core', version: '3.4.8'
+	implementation group: 'commons-validator', name: 'commons-validator', version: '1.7'
 }
 
 test {
